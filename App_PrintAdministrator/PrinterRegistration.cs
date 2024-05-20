@@ -95,8 +95,6 @@ namespace App_PrintAdministrator
 				MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
 				mainPart.Document = new Document();
 				Body body = mainPart.Document.AppendChild(new Body());
-
-				// Agregar el título en negrita
 				Paragraph titlePara = body.AppendChild(new Paragraph());
 				Run titleRun = titlePara.AppendChild(new Run());
 				titleRun.AppendChild(new Text("Printer Registration"));

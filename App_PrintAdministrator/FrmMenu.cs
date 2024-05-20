@@ -8,6 +8,7 @@ namespace App_PrintAdministrator
 		public FrmMenu()
 		{
 			InitializeComponent();
+			ShowWelcomeMessage();
 		}
 
 		private void btnSales_print_Click(object sender, EventArgs e)
@@ -44,8 +45,11 @@ namespace App_PrintAdministrator
 				notes.Show();
 			}
 		}
+		public void ShowWelcomeMessage()
+		{
+			MessageBox.Show("Welcome to the application!", "Welcome", MessageBoxButtons.OK, MessageBoxIcon.Information);
+		}
 
-	
 
 
 	}

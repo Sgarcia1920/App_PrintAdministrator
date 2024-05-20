@@ -47,7 +47,7 @@ namespace App_PrintAdministrator
 		{
 			this.brand = "XEROX";
 			this.series = series;
-			this.sale_price = sale_price;
+			this.-sale_price = sale_price;
 			this.rent_price = rent_price;
 		}
 

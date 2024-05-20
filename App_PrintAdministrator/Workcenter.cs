@@ -15,7 +15,6 @@ namespace App_PrintAdministrator
 			get { return sale_price; }
 		}
 
-		//property for rent price
 		private decimal rent_price;
 		public new decimal RentPrice
 		{

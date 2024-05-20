@@ -33,7 +33,7 @@ namespace App_PrintAdministrator
 			dgvSalePrint.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 			dgvSalePrint.ReadOnly = true;
 			paper = new TypePaper[20];
-			sales = new Sales[15, 2];
+			sales = new Sales[15, 5];
 			currentindex = 0;
 			searchprice = 0;
 			currentRowIndex = 0;
@@ -60,7 +60,7 @@ namespace App_PrintAdministrator
 				currentRowIndex++;
 
 				decimal totalVentas = (AddTotalsSales(sales));
-				txtSubtotal.Text = totalVentas.ToString("F2" );
+				txtSubtotal.Text = totalVentas.ToString("F2");
 				CalculateIVA(totalVentas, txtIVA);
 				decimal totalWithIva = totalVentas * 1.16m;
 				txtTotal.Text = totalWithIva.ToString("F2");
@@ -171,7 +171,7 @@ namespace App_PrintAdministrator
 
 		private void btncalculate_Click(object sender, EventArgs e)
 		{
-		
+
 			if (Convert.ToDecimal(txtPayment.Text) < Convert.ToDecimal(txtTotal.Text))
 			{
 				MessageBox.Show("The payment must be greater than the total");
@@ -218,28 +218,44 @@ namespace App_PrintAdministrator
 					xmlWriter.WriteStartDocument();
 					xmlWriter.WriteStartElement("Sales");
 
-					for (int i = 0; i < sales.GetLength(0); i++)
+					foreach (DataGridViewRow row in dgvSalePrint.Rows)
 					{
-						for (int j = 0; j < sales.GetLength(1); j++)
+						if (!row.IsNewRow)
 						{
-							if (sales[i, j] != null)
-							{
-								xmlWriter.WriteStartElement("Sale");
-								xmlWriter.WriteElementString("Size", sales[i, j].Size);
-								xmlWriter.WriteElementString("AvailablePaperSales", sales[i, j].AvailablePaperSales);
-								xmlWriter.WriteElementString("SalesOptions", sales[i, j].Salesoptions);
-								xmlWriter.WriteElementString("Price", sales[i, j].PriceSale.ToString("F2"));
-								xmlWriter.WriteElementString("Quantity", sales[i, j].Numberprints.ToString());
-								xmlWriter.WriteElementString("Total", sales[i, j].Calculates_totalsale().ToString("F2"));
-								xmlWriter.WriteEndElement();
-							}
+							xmlWriter.WriteStartElement("Sale");
+
+						
+							xmlWriter.WriteElementString("Size", row.Cells["Size"].Value?.ToString() ?? string.Empty);
+							xmlWriter.WriteElementString("Name", row.Cells["Name"].Value?.ToString() ?? string.Empty);
+							xmlWriter.WriteElementString("SalesOptions", row.Cells["SalesOptions"].Value?.ToString() ?? string.Empty);
+
+					
+							double price = 0.0;
+							double.TryParse(row.Cells["Price"].Value?.ToString(), out price);
+							xmlWriter.WriteElementString("Price", price.ToString("F2"));
+
+							int quantity = 0;
+							int.TryParse(row.Cells["Quantity"].Value?.ToString(), out quantity);
+							xmlWriter.WriteElementString("Quantity", quantity.ToString());
+
+							double total = 0.0;
+							double.TryParse(row.Cells["Total"].Value?.ToString(), out total);
+							xmlWriter.WriteElementString("Total", total.ToString("F2"));
+
+							xmlWriter.WriteEndElement();
 						}
 					}
+
+				
+					xmlWriter.WriteStartElement("Summary");
+					xmlWriter.WriteElementString("Subtotal", string.IsNullOrEmpty(txtSubtotal.Text) ? "0.00" : txtSubtotal.Text);
+					xmlWriter.WriteElementString("IVA", string.IsNullOrEmpty(txtIVA.Text) ? "0.00" : txtIVA.Text);
+					xmlWriter.WriteElementString("Total", string.IsNullOrEmpty(txtTotal.Text) ? "0.00" : txtTotal.Text);
+					xmlWriter.WriteEndElement();
 
 					xmlWriter.WriteEndElement();
 					xmlWriter.WriteEndDocument();
 				}
-
 				MessageBox.Show("File saved successfully!");
 			}
 			catch (Exception ex)
@@ -287,28 +303,18 @@ namespace App_PrintAdministrator
 					{
 						if (sales[i, j] != null)
 						{
-							worksheet.Cells[currentRow, 1].Value = sales[i,j].Size;
-							worksheet.Cells[currentRow, 2].Value = sales[i,j].AvailablePaperSales;
-							worksheet.Cells[currentRow, 3].Value = sales[i,j].Salesoptions;
-							worksheet.Cells[currentRow, 4].Value = sales[i,j].PriceSale;
-							worksheet.Cells[currentRow, 5].Value = sales[i,j].Numberprints;
-							worksheet.Cells[currentRow, 6].Value = sales[i,j].Calculates_totalsale();
-								currentRow++;
+							worksheet.Cells[currentRow, 1].Value = sales[i, j].Size;
+							worksheet.Cells[currentRow, 2].Value = sales[i, j].AvailablePaperSales;
+							worksheet.Cells[currentRow, 3].Value = sales[i, j].Salesoptions;
+							worksheet.Cells[currentRow, 4].Value = sales[i, j].PriceSale;
+							worksheet.Cells[currentRow, 5].Value = sales[i, j].Numberprints;
+							worksheet.Cells[currentRow, 6].Value = sales[i, j].Calculates_totalsale();
+							currentRow++;
 						}
 					}
 				}
 
-				worksheet.Cells[currentRow, 5].Value = "Subtotal";
-				worksheet.Cells[currentRow, 6].Value = Convert.ToDecimal(txtSubtotal.Text);
-				currentRow++;
-				worksheet.Cells[currentRow, 5].Value = "IVA";
-				worksheet.Cells[currentRow, 6].Value = Convert.ToDecimal(txtIVA.Text);
-				currentRow++;
-				worksheet.Cells[currentRow, 5].Value = "Total";
-				worksheet.Cells[currentRow, 6].Value = Convert.ToDecimal(txtTotal.Text);
-				currentRow++;
 
-				worksheet.Cells[2, 4, currentRow, 6].Style.Numberformat.Format = "#,##0.00";
 
 				worksheet.Cells.AutoFitColumns();
 
@@ -317,6 +323,18 @@ namespace App_PrintAdministrator
 			}
 
 			MessageBox.Show("File saved successfully!");
+		}
+
+		private void btnreset_Click(object sender, EventArgs e)
+		{
+		
+			dgvSalePrint.Rows.Clear();
+			txtSubtotal.Text = "";
+			txtIVA.Text = "";
+			txtTotal.Text = "";
+			txtPayment.Text = "";
+			txtChange.Text = "";
+
 		}
 	}
 }

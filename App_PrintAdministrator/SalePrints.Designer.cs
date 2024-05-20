@@ -60,6 +60,7 @@
 			txtSubtotal = new TextBox();
 			label6 = new Label();
 			dgvSalePrint = new DataGridView();
+			btnreset = new FontAwesome.Sharp.IconButton();
 			groupBox1.SuspendLayout();
 			groupBox2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)dgvSalePrint).BeginInit();
@@ -441,6 +442,19 @@
 			dgvSalePrint.Size = new Size(832, 390);
 			dgvSalePrint.TabIndex = 12;
 			// 
+			// btnreset
+			// 
+			btnreset.BackColor = Color.LightYellow;
+			btnreset.IconChar = FontAwesome.Sharp.IconChar.Redo;
+			btnreset.IconColor = Color.LightCoral;
+			btnreset.IconFont = FontAwesome.Sharp.IconFont.Auto;
+			btnreset.Location = new Point(779, 284);
+			btnreset.Name = "btnreset";
+			btnreset.Size = new Size(61, 51);
+			btnreset.TabIndex = 19;
+			btnreset.UseVisualStyleBackColor = false;
+			btnreset.Click += btnreset_Click;
+			// 
 			// FrmSalePrints
 			// 
 			AutoScaleDimensions = new SizeF(8F, 20F);
@@ -448,6 +462,7 @@
 			AutoScroll = true;
 			BackColor = Color.AliceBlue;
 			ClientSize = new Size(1332, 743);
+			Controls.Add(btnreset);
 			Controls.Add(dgvSalePrint);
 			Controls.Add(groupBox2);
 			Controls.Add(groupBox1);
@@ -495,5 +510,6 @@
 		private Button btnclearcontrols;
 		private Button btncalculate;
 		private Button btnexportsalesexcel;
+		private FontAwesome.Sharp.IconButton btnreset;
 	}
 }
