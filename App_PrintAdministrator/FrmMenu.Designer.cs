@@ -44,6 +44,7 @@
 			btnPaper_register.IconChar = FontAwesome.Sharp.IconChar.ClipboardList;
 			btnPaper_register.IconColor = SystemColors.ButtonHighlight;
 			btnPaper_register.IconFont = FontAwesome.Sharp.IconFont.Auto;
+			btnPaper_register.ImageAlign = ContentAlignment.MiddleRight;
 			btnPaper_register.Location = new Point(498, 299);
 			btnPaper_register.Name = "btnPaper_register";
 			btnPaper_register.Size = new Size(298, 121);
@@ -66,7 +67,8 @@
 			btnSales_print.Name = "btnSales_print";
 			btnSales_print.Size = new Size(298, 121);
 			btnSales_print.TabIndex = 2;
-			btnSales_print.Text = "Sale of Prints ";
+			btnSales_print.Text = "Prints Sales";
+			btnSales_print.TextAlign = ContentAlignment.MiddleRight;
 			btnSales_print.TextImageRelation = TextImageRelation.ImageBeforeText;
 			btnSales_print.UseVisualStyleBackColor = false;
 			btnSales_print.Click += btnSales_print_Click;
@@ -77,9 +79,10 @@
 			btn_notes.FlatStyle = FlatStyle.Flat;
 			btn_notes.Font = new Font("Cambria", 16.2F, FontStyle.Bold);
 			btn_notes.ForeColor = SystemColors.ButtonHighlight;
-			btn_notes.IconChar = FontAwesome.Sharp.IconChar.ClipboardList;
+			btn_notes.IconChar = FontAwesome.Sharp.IconChar.NoteSticky;
 			btn_notes.IconColor = SystemColors.ButtonHighlight;
 			btn_notes.IconFont = FontAwesome.Sharp.IconFont.Auto;
+			btn_notes.ImageAlign = ContentAlignment.MiddleRight;
 			btn_notes.Location = new Point(161, 299);
 			btn_notes.Name = "btn_notes";
 			btn_notes.Size = new Size(298, 121);
@@ -95,7 +98,7 @@
 			btnPrinter_registration.FlatStyle = FlatStyle.Flat;
 			btnPrinter_registration.Font = new Font("Cambria", 16.2F, FontStyle.Bold);
 			btnPrinter_registration.ForeColor = Color.MintCream;
-			btnPrinter_registration.IconChar = FontAwesome.Sharp.IconChar.ClipboardList;
+			btnPrinter_registration.IconChar = FontAwesome.Sharp.IconChar.Print;
 			btnPrinter_registration.IconColor = Color.WhiteSmoke;
 			btnPrinter_registration.IconFont = FontAwesome.Sharp.IconFont.Auto;
 			btnPrinter_registration.Location = new Point(498, 139);
