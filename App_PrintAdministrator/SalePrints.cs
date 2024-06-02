@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿
+using Newtonsoft.Json;
+using System.Text.Json;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
@@ -6,11 +8,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace App_PrintAdministrator
 {
@@ -199,84 +205,19 @@ namespace App_PrintAdministrator
 			txtChange.Text = "";
 		}
 
-		private void btnExportpdfXML_Click(object sender, EventArgs e)
-		{
-			SaveFileDialog saveFile = new SaveFileDialog();
-			saveFile.Filter = "XML files (*.xml)|*.xml";
-			saveFile.Title = "Save file";
-
-			if (saveFile.ShowDialog() != DialogResult.OK)
-			{
-				MessageBox.Show("No file selected");
-				return;
-			}
-
-			try
-			{
-				using (XmlWriter xmlWriter = XmlWriter.Create(saveFile.FileName))
-				{
-					xmlWriter.WriteStartDocument();
-					xmlWriter.WriteStartElement("Sales");
-
-					foreach (DataGridViewRow row in dgvSalePrint.Rows)
-					{
-						if (!row.IsNewRow)
-						{
-							xmlWriter.WriteStartElement("Sale");
-
-						
-							xmlWriter.WriteElementString("Size", row.Cells["Size"].Value?.ToString() ?? string.Empty);
-							xmlWriter.WriteElementString("Name", row.Cells["Name"].Value?.ToString() ?? string.Empty);
-							xmlWriter.WriteElementString("SalesOptions", row.Cells["SalesOptions"].Value?.ToString() ?? string.Empty);
-
-					
-							double price = 0.0;
-							double.TryParse(row.Cells["Price"].Value?.ToString(), out price);
-							xmlWriter.WriteElementString("Price", price.ToString("F2"));
-
-							int quantity = 0;
-							int.TryParse(row.Cells["Quantity"].Value?.ToString(), out quantity);
-							xmlWriter.WriteElementString("Quantity", quantity.ToString());
-
-							double total = 0.0;
-							double.TryParse(row.Cells["Total"].Value?.ToString(), out total);
-							xmlWriter.WriteElementString("Total", total.ToString("F2"));
-
-							xmlWriter.WriteEndElement();
-						}
-					}
-
-				
-					xmlWriter.WriteStartElement("Summary");
-					xmlWriter.WriteElementString("Subtotal", string.IsNullOrEmpty(txtSubtotal.Text) ? "0.00" : txtSubtotal.Text);
-					xmlWriter.WriteElementString("IVA", string.IsNullOrEmpty(txtIVA.Text) ? "0.00" : txtIVA.Text);
-					xmlWriter.WriteElementString("Total", string.IsNullOrEmpty(txtTotal.Text) ? "0.00" : txtTotal.Text);
-					xmlWriter.WriteEndElement();
-
-					xmlWriter.WriteEndElement();
-					xmlWriter.WriteEndDocument();
-				}
-				MessageBox.Show("File saved successfully!");
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show("An error occurred while saving the file: " + ex.Message);
-			}
-		}
 
 		private void btnexportsalesexcel_Click(object sender, EventArgs e)
 		{
 			SaveFileDialog saveFile = new SaveFileDialog();
-			saveFile.Filter = "Excel files (*.xlsx)|*.xlsx";
+			saveFile.Filter = "EXCEL files (*.xlsx)|*.xlsx";
 			saveFile.Title = "Save file";
+
 			if (saveFile.ShowDialog() != DialogResult.OK)
 			{
 				MessageBox.Show("No file selected");
 				return;
 			}
-
 			string filePath = saveFile.FileName;
-
 			using (ExcelPackage package = new ExcelPackage())
 			{
 				ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Sales Report");
@@ -327,7 +268,7 @@ namespace App_PrintAdministrator
 
 		private void btnreset_Click(object sender, EventArgs e)
 		{
-		
+
 			dgvSalePrint.Rows.Clear();
 			txtSubtotal.Text = "";
 			txtIVA.Text = "";
@@ -336,5 +277,189 @@ namespace App_PrintAdministrator
 			txtChange.Text = "";
 
 		}
+
+		private void btnExportinvoice_Click(object sender, EventArgs e)
+		{
+			
+			switch (cb_ExportInvoice.Text.ToUpper())
+			{
+				case "XML":
+					try
+					{
+						SaveFileDialog saveFileexport = new SaveFileDialog();
+						saveFileexport.Filter = "XML files (*.xml)|*.xml";
+						saveFileexport.Title = "Save file";
+						if (saveFileexport.ShowDialog() != DialogResult.OK)
+						{
+							MessageBox.Show("No file selected");
+							return;
+						}
+						string filePathXML = saveFileexport.FileName;
+						using (XmlWriter xmlWriter = XmlWriter.Create(filePathXML))
+						{
+							xmlWriter.WriteStartDocument();
+							xmlWriter.WriteStartElement("Sales");
+
+							foreach (DataGridViewRow row in dgvSalePrint.Rows)
+							{
+								if (!row.IsNewRow)
+								{
+									xmlWriter.WriteStartElement("Sale");
+
+
+									xmlWriter.WriteElementString("Size", row.Cells["Size"].Value?.ToString() ?? string.Empty);
+									xmlWriter.WriteElementString("Name", row.Cells["Name"].Value?.ToString() ?? string.Empty);
+									xmlWriter.WriteElementString("SalesOptions", row.Cells["SalesOptions"].Value?.ToString() ?? string.Empty);
+
+
+									double price = 0.0;
+									double.TryParse(row.Cells["Price"].Value?.ToString(), out price);
+									xmlWriter.WriteElementString("Price", price.ToString("F2"));
+
+									int quantity = 0;
+									int.TryParse(row.Cells["Quantity"].Value?.ToString(), out quantity);
+									xmlWriter.WriteElementString("Quantity", quantity.ToString());
+
+									double total = 0.0;
+									double.TryParse(row.Cells["Total"].Value?.ToString(), out total);
+									xmlWriter.WriteElementString("Total", total.ToString("F2"));
+
+									xmlWriter.WriteEndElement();
+								}
+							}
+
+
+							xmlWriter.WriteStartElement("Summary");
+							xmlWriter.WriteElementString("Subtotal", string.IsNullOrEmpty(txtSubtotal.Text) ? "0.00" : txtSubtotal.Text);
+							xmlWriter.WriteElementString("IVA", string.IsNullOrEmpty(txtIVA.Text) ? "0.00" : txtIVA.Text);
+							xmlWriter.WriteElementString("Total", string.IsNullOrEmpty(txtTotal.Text) ? "0.00" : txtTotal.Text);
+							xmlWriter.WriteEndElement();
+
+							xmlWriter.WriteEndElement();
+							xmlWriter.WriteEndDocument();
+						}
+						MessageBox.Show("File saved successfully!");
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show("An error occurred while saving the file: " + ex.Message);
+					}
+
+					break;
+				case "JSON":
+					SaveFileDialog saveFilejson = new SaveFileDialog();
+					saveFilejson.Filter = "Json files (*.json)|*.json";
+					saveFilejson.Title = "Save file";
+
+					if (saveFilejson.ShowDialog() != DialogResult.OK)
+					{
+						MessageBox.Show("No file selected");
+						return;
+					}
+					string filePath = saveFilejson.FileName;
+					List<object> salesList = new List<object>();
+
+					foreach (DataGridViewRow row in dgvSalePrint.Rows)
+					{
+						if (!row.IsNewRow)
+						{
+							var sale = new 
+							{
+								Size = row.Cells["Size"].Value?.ToString() ?? string.Empty,
+								Name = row.Cells["Name"].Value?.ToString() ?? string.Empty,
+								SalesOptions = row.Cells["SalesOptions"].Value?.ToString() ?? string.Empty,
+								Price = Convert.ToDouble(row.Cells["Price"].Value),
+								Quantity = Convert.ToInt32(row.Cells["Quantity"].Value),
+								Total = Convert.ToDouble(row.Cells["Total"].Value)
+							};
+
+							string saleInfo = $"Size: {sale.Size}{Environment.NewLine}" +
+											  $"Name: {sale.Name}{Environment.NewLine}" +
+											  $"Sales Options: {sale.SalesOptions}{Environment.NewLine}" +
+											  $"Price: {sale.Price}{Environment.NewLine}" +
+											  $"Quantity: {sale.Quantity}{Environment.NewLine}" +
+											  $"Total: {sale.Total}{Environment.NewLine}";
+
+							salesList.Add(saleInfo);
+						}
+					}
+
+					    string jsonString = System.Text.Json.JsonSerializer.Serialize(salesList);
+
+				     	File.WriteAllText(filePath, jsonString);
+
+						MessageBox.Show("File successfully saved as JSON ");
+						break;
+
+			     case "PDF":
+
+					Document document = new Document();
+					SaveFileDialog saveFilePDF = new SaveFileDialog();
+					saveFilePDF.Filter = "PDF files (*.PDF)|*.PDF";
+					saveFilePDF.Title = "Save file";
+
+					if (saveFilePDF.ShowDialog() != DialogResult.OK)
+					{
+						MessageBox.Show("No file selected");
+						return;
+					}
+					string filePathPDF = saveFilePDF.FileName;
+					try
+					{
+							PdfWriter.GetInstance(document, new FileStream(filePathPDF, FileMode.Create));
+							document.Open();
+							PdfPTable table = new PdfPTable(dgvSalePrint.Columns.Count);
+							for (int i = 0; i < dgvSalePrint.Columns.Count; i++)
+							{
+								table.AddCell(new PdfPCell(new Phrase(dgvSalePrint.Columns[i].HeaderText)));
+							}
+
+							// Agregar filas de datos a la tabla
+							for (int i = 0; i < dgvSalePrint.Rows.Count; i++)
+							{
+								if (!dgvSalePrint.Rows[i].IsNewRow)
+								{
+									for (int j = 0; j < dgvSalePrint.Columns.Count; j++)
+									{
+										table.AddCell(new PdfPCell(new Phrase(dgvSalePrint.Rows[i].Cells[j].Value.ToString())));
+									}
+								}
+							}
+							table.AddCell("");
+							table.AddCell("");
+						    table.AddCell("");
+							table.AddCell("");
+							table.AddCell("Total:");
+							table.AddCell(txtTotal.Text);
+							table.AddCell("");
+							table.AddCell("");
+							table.AddCell("");
+							table.AddCell(""); 
+							table.AddCell("IVA:");
+							table.AddCell(txtIVA.Text); 
+							table.AddCell(""); 
+							table.AddCell(""); 
+							table.AddCell(""); 
+							table.AddCell(""); 
+							table.AddCell("Total Final:");
+							table.AddCell((txtTotal.Text)); 
+
+							document.Add(table);
+							document.Close();
+
+							MessageBox.Show("File saved successfully!");
+						
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show("An error occurred while saving the file: " + ex.Message);
+					}
+					break;
+					
+				default:
+					break;
+			}
+		}
+		
 	}
 }

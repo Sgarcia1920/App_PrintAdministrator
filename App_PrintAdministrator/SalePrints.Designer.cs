@@ -46,8 +46,9 @@
 			btncancel_purchase = new Button();
 			btnAddsales = new Button();
 			groupBox2 = new GroupBox();
+			cb_ExportInvoice = new ComboBox();
 			btnexportsalesexcel = new Button();
-			btnExportpdfXML = new Button();
+			btnExportinvoice = new Button();
 			btncalculate = new Button();
 			txtChange = new TextBox();
 			label9 = new Label();
@@ -276,8 +277,9 @@
 			// 
 			// groupBox2
 			// 
+			groupBox2.Controls.Add(cb_ExportInvoice);
 			groupBox2.Controls.Add(btnexportsalesexcel);
-			groupBox2.Controls.Add(btnExportpdfXML);
+			groupBox2.Controls.Add(btnExportinvoice);
 			groupBox2.Controls.Add(btncalculate);
 			groupBox2.Controls.Add(txtChange);
 			groupBox2.Controls.Add(label9);
@@ -298,12 +300,22 @@
 			groupBox2.TabStop = false;
 			groupBox2.Text = "Payment";
 			// 
+			// cb_ExportInvoice
+			// 
+			cb_ExportInvoice.Font = new Font("Cambria", 10.2F);
+			cb_ExportInvoice.FormattingEnabled = true;
+			cb_ExportInvoice.Items.AddRange(new object[] { "XML", "JSON", "PDF" });
+			cb_ExportInvoice.Location = new Point(169, 505);
+			cb_ExportInvoice.Name = "cb_ExportInvoice";
+			cb_ExportInvoice.Size = new Size(186, 28);
+			cb_ExportInvoice.TabIndex = 19;
+			// 
 			// btnexportsalesexcel
 			// 
 			btnexportsalesexcel.BackColor = Color.YellowGreen;
 			btnexportsalesexcel.Font = new Font("Cambria", 13.8F, FontStyle.Bold);
 			btnexportsalesexcel.ForeColor = SystemColors.ButtonHighlight;
-			btnexportsalesexcel.Location = new Point(154, 496);
+			btnexportsalesexcel.Location = new Point(154, 414);
 			btnexportsalesexcel.Name = "btnexportsalesexcel";
 			btnexportsalesexcel.Size = new Size(223, 64);
 			btnexportsalesexcel.TabIndex = 22;
@@ -311,18 +323,18 @@
 			btnexportsalesexcel.UseVisualStyleBackColor = false;
 			btnexportsalesexcel.Click += btnexportsalesexcel_Click;
 			// 
-			// btnExportpdfXML
+			// btnExportinvoice
 			// 
-			btnExportpdfXML.BackColor = Color.DarkSalmon;
-			btnExportpdfXML.Font = new Font("Cambria", 13.8F, FontStyle.Bold);
-			btnExportpdfXML.ForeColor = SystemColors.ButtonHighlight;
-			btnExportpdfXML.Location = new Point(154, 412);
-			btnExportpdfXML.Name = "btnExportpdfXML";
-			btnExportpdfXML.Size = new Size(223, 64);
-			btnExportpdfXML.TabIndex = 13;
-			btnExportpdfXML.Text = "Export Invoice";
-			btnExportpdfXML.UseVisualStyleBackColor = false;
-			btnExportpdfXML.Click += btnExportpdfXML_Click;
+			btnExportinvoice.BackColor = Color.DarkSalmon;
+			btnExportinvoice.Font = new Font("Cambria", 13.8F, FontStyle.Bold);
+			btnExportinvoice.ForeColor = SystemColors.ButtonHighlight;
+			btnExportinvoice.Location = new Point(154, 551);
+			btnExportinvoice.Name = "btnExportinvoice";
+			btnExportinvoice.Size = new Size(223, 64);
+			btnExportinvoice.TabIndex = 13;
+			btnExportinvoice.Text = "Export Invoice ";
+			btnExportinvoice.UseVisualStyleBackColor = false;
+			btnExportinvoice.Click += btnExportinvoice_Click;
 			// 
 			// btncalculate
 			// 
@@ -501,7 +513,7 @@
 		private Label label9;
 		private TextBox txtPayment;
 		private Label label10;
-		private Button btnExportpdfXML;
+		private Button btnExportinvoice;
 		private Button btnAddsales;
 		private Button btncancel_purchase;
 		private Button btnExporttxtpaper;
@@ -511,5 +523,6 @@
 		private Button btncalculate;
 		private Button btnexportsalesexcel;
 		private FontAwesome.Sharp.IconButton btnreset;
+		private ComboBox cb_ExportInvoice;
 	}
 }
