@@ -280,7 +280,7 @@ namespace App_PrintAdministrator
 
 		private void btnExportinvoice_Click(object sender, EventArgs e)
 		{
-			
+
 			switch (cb_ExportInvoice.Text.ToUpper())
 			{
 				case "XML":
@@ -364,7 +364,7 @@ namespace App_PrintAdministrator
 					{
 						if (!row.IsNewRow)
 						{
-							var sale = new 
+							var sale = new
 							{
 								Size = row.Cells["Size"].Value?.ToString() ?? string.Empty,
 								Name = row.Cells["Name"].Value?.ToString() ?? string.Empty,
@@ -385,14 +385,14 @@ namespace App_PrintAdministrator
 						}
 					}
 
-					    string jsonString = System.Text.Json.JsonSerializer.Serialize(salesList);
+					string jsonString = System.Text.Json.JsonSerializer.Serialize(salesList);
 
-				     	File.WriteAllText(filePath, jsonString);
+					File.WriteAllText(filePath, jsonString);
 
-						MessageBox.Show("File successfully saved as JSON ");
-						break;
+					MessageBox.Show("File successfully saved as JSON ");
+					break;
 
-			     case "PDF":
+				case "PDF":
 
 					Document document = new Document();
 					SaveFileDialog saveFilePDF = new SaveFileDialog();
@@ -407,60 +407,63 @@ namespace App_PrintAdministrator
 					string filePathPDF = saveFilePDF.FileName;
 					try
 					{
-							PdfWriter.GetInstance(document, new FileStream(filePathPDF, FileMode.Create));
-							document.Open();
-							PdfPTable table = new PdfPTable(dgvSalePrint.Columns.Count);
-							for (int i = 0; i < dgvSalePrint.Columns.Count; i++)
-							{
-								table.AddCell(new PdfPCell(new Phrase(dgvSalePrint.Columns[i].HeaderText)));
-							}
+						PdfWriter.GetInstance(document, new FileStream(filePathPDF, FileMode.Create));
+						document.Open();
+						PdfPTable table = new PdfPTable(dgvSalePrint.Columns.Count);
+						for (int i = 0; i < dgvSalePrint.Columns.Count; i++)
+						{
+							table.AddCell(new PdfPCell(new Phrase(dgvSalePrint.Columns[i].HeaderText)));
+						}
 
-							// Agregar filas de datos a la tabla
-							for (int i = 0; i < dgvSalePrint.Rows.Count; i++)
+						// Agregar filas de datos a la tabla
+						for (int i = 0; i < dgvSalePrint.Rows.Count; i++)
+						{
+							if (!dgvSalePrint.Rows[i].IsNewRow)
 							{
-								if (!dgvSalePrint.Rows[i].IsNewRow)
+								for (int j = 0; j < dgvSalePrint.Columns.Count; j++)
 								{
-									for (int j = 0; j < dgvSalePrint.Columns.Count; j++)
-									{
-										table.AddCell(new PdfPCell(new Phrase(dgvSalePrint.Rows[i].Cells[j].Value.ToString())));
-									}
+									table.AddCell(new PdfPCell(new Phrase(dgvSalePrint.Rows[i].Cells[j].Value.ToString())));
 								}
 							}
-							table.AddCell("");
-							table.AddCell("");
-						    table.AddCell("");
-							table.AddCell("");
-							table.AddCell("Total:");
-							table.AddCell(txtTotal.Text);
-							table.AddCell("");
-							table.AddCell("");
-							table.AddCell("");
-							table.AddCell(""); 
-							table.AddCell("IVA:");
-							table.AddCell(txtIVA.Text); 
-							table.AddCell(""); 
-							table.AddCell(""); 
-							table.AddCell(""); 
-							table.AddCell(""); 
-							table.AddCell("Total Final:");
-							table.AddCell((txtTotal.Text)); 
+						}
+						table.AddCell("");
+						table.AddCell("");
+						table.AddCell("");
+						table.AddCell("");
+						table.AddCell("Total:");
+						table.AddCell(txtTotal.Text);
+						table.AddCell("");
+						table.AddCell("");
+						table.AddCell("");
+						table.AddCell("");
+						table.AddCell("IVA:");
+						table.AddCell(txtIVA.Text);
+						table.AddCell("");
+						table.AddCell("");
+						table.AddCell("");
+						table.AddCell("");
+						table.AddCell("Total Final:");
+						table.AddCell((txtTotal.Text));
 
-							document.Add(table);
-							document.Close();
+						document.Add(table);
+						document.Close();
 
-							MessageBox.Show("File saved successfully!");
-						
+						MessageBox.Show("File saved successfully!");
+
 					}
 					catch (Exception ex)
 					{
 						MessageBox.Show("An error occurred while saving the file: " + ex.Message);
 					}
 					break;
-					
+
 				default:
+					MessageBox.Show("No data entry");
+					
 					break;
 			}
 		}
-		
+
+	
 	}
 }
