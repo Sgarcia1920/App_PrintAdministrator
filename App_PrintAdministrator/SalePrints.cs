@@ -359,6 +359,7 @@ namespace App_PrintAdministrator
 					string filePath = saveFilejson.FileName;
 					List<object> salesList = new List<object>();
 
+
 					foreach (DataGridViewRow row in dgvSalePrint.Rows)
 					{
 						if (!row.IsNewRow)
